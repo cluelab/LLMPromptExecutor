@@ -1,6 +1,5 @@
 package it.unisa.cluelab.lllm.llm.agents.generic;
 
-import it.unisa.cluelab.Main;
 import it.unisa.cluelab.lllm.llm.LLMEvaluatorAgent;
 import it.unisa.cluelab.lllm.llm.prompt.Prompt;
 import okhttp3.*;
