@@ -2,22 +2,22 @@ package it.unisa.cluelab.lllm.llm.prompt;
 
 public class Prompt {
 
-    private String type;
+    private String role;
 
     private String content;
 
 
-    public Prompt(String type, String content) {
-        this.type = type;
+    public Prompt(String role, String content) {
+        this.role = role;
         this.content = content;
     }
 
-    public String getType() {
-        return type;
+    public String getRole() {
+        return role;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getContent() {

@@ -15,7 +15,7 @@ public class PromptList extends ArrayList<Prompt> {
     public void addPrompt(String type, String content) throws Exception {
         if (size() == 0 && type.equals(SYSTEM)) {
             add(new Prompt(type, content));
-        } else if (!get(size() - 1).getType().equals(type)) {
+        } else if (!get(size() - 1).getRole().equals(type)) {
             add(new Prompt(type, content));
         } else {
             throw new Exception("wrong format of prompts");
@@ -33,7 +33,7 @@ public class PromptList extends ArrayList<Prompt> {
         for (int i = 0; i < size(); i++) {
             Prompt p = get(i);
             JSONObject message = new JSONObject();
-            message.put("role", p.getType());
+            message.put("role", p.getRole());
             message.put("content", p.getContent());
             messages.put(message);
         }

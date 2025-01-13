@@ -66,7 +66,7 @@ public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent {
         for (int i = 1; i < prompts.size(); i++) {
             Prompt p = prompts.get(i);
             JSONObject message = new JSONObject();
-            message.put("role", p.getType());
+            message.put("role", p.getRole());
             message.put("content", p.getContent());
             messages.put(message);
         }
