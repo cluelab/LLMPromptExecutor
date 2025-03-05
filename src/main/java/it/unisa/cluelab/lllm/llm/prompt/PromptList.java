@@ -22,6 +22,11 @@ public class PromptList extends ArrayList<Prompt> {
         }
     }
 
+    public void addPairPrompt(String user, String assistant) {
+        add(new Prompt(USER, user));
+        add(new Prompt(ASSISTANT, assistant));
+    }
+
     public void replaceTag(String tag, String value) {
         this.forEach(p -> p.setContent(p.getContent().replace(tag, value)));
 
