@@ -14,12 +14,12 @@ public class HumanInTheMiddle {
     public void addHumanPrompt() throws Exception {
         Scanner in = new Scanner(System.in);
         String content = in.nextLine();
-        prompts.addPrompt(PromptList.USER, content);
+        prompts.addUserPrompt(content);
         in.close();
     }
 
     public void addAssistantPrompt(String content) throws Exception {
-        prompts.addPrompt(PromptList.ASSISTANT, content);
+        prompts.addAssistantPrompt(content);
     }
 }
 

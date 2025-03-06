@@ -12,26 +12,35 @@ public class PromptList extends ArrayList<Prompt> {
     public static final String USER = "user";
     public static final String ASSISTANT = "assistant";
 
-    public void addPrompt(String type, String content) throws Exception {
+    private void addPrompt(String type, String content) {
         if (size() == 0 && type.equals(SYSTEM)) {
             add(new Prompt(type, content));
         } else if (!get(size() - 1).getRole().equals(type)) {
             add(new Prompt(type, content));
         } else {
-            throw new Exception("wrong format of prompts");
+            throw new AssertionError("WrongFormatException. Add [" + type + "] after [" + get(size() - 1).getRole() + "] is not allowed");
         }
     }
 
+    public void addSystemPrompt(String content) {
+        addPrompt(ASSISTANT, content);
+    }
+
+    public void addUserPrompt(String content) {
+        addPrompt(USER, content);
+    }
+    public void addAssistantPrompt(String content)  {
+        addPrompt(ASSISTANT, content);
+    }
     public void addPairPrompt(String user, String assistant) {
-        add(new Prompt(USER, user));
-        add(new Prompt(ASSISTANT, assistant));
+        addUserPrompt(user);
+        addAssistantPrompt(assistant);
     }
 
     public void replaceTag(String tag, String value) {
         this.forEach(p -> p.setContent(p.getContent().replace(tag, value)));
 
     }
-
     public void exportToJson(String filename) throws FileNotFoundException {
         JSONArray messages = new JSONArray();
 
@@ -45,7 +54,6 @@ public class PromptList extends ArrayList<Prompt> {
         file_put_contents(filename, messages.toString());
 
     }
-
     public void importFromJson(String filename) throws IOException {
         String json = file_get_contents(filename);
         JSONArray messages = new JSONArray(json);

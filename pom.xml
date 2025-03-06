@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.unisa.cluelab</groupId>
     <artifactId>promptexecutorcli</artifactId>
-    <version>0.8</version>
+    <version>0.8.1</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
