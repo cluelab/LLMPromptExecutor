@@ -15,9 +15,4 @@ public abstract class LLMEvaluatorAgent {
     }
     public abstract String evaluate(List<Prompt> prompts, String grid) throws IOException;
 
-
-    public String getSettingProperty(String key) {
-        if(!this.settings.has(key)) return  ""; /** maybe it is better an exception **/
-        return this.settings.getString(key);
-    }
 }

@@ -18,8 +18,8 @@ public abstract class GeminiEvaluatorAgent extends LLMEvaluatorAgent {
     private final String projectLocation;
     public GeminiEvaluatorAgent(JSONObject settings) {
         super(settings);
-        this.projectId = getSettingProperty("gemini-projectId");
-        this.projectLocation = getSettingProperty("gemini-location");
+        this.projectId = settings.getString("gemini-projectId");
+        this.projectLocation = settings.getString("gemini-location");
     }
 
     public void setModel(String model) {

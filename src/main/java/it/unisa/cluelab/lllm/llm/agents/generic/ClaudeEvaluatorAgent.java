@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent {
 
-    private int maxTokens = 4096;
+    private final int maxTokens;
     private String model;
 
     private OkHttpClient client;
@@ -24,8 +24,9 @@ public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent {
 
     public ClaudeEvaluatorAgent(JSONObject settings) {
         super(settings);
-        this.token = getSettingProperty("claude-token");
-        this.temperature = Double.parseDouble(getSettingProperty("temperature"));
+        this.token = settings.getString("claude-token");
+        this.temperature = settings.getFloat("temperature");
+        this.maxTokens = settings.getInt("num_ctx");
         initClient();
     }
 

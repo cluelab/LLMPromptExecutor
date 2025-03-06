@@ -15,7 +15,7 @@ public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent {
 
     public static Logger logger = Logger.getLogger(OLLAMAEvaluatorAgent.class.getName());
     private final String urlLlama;
-    private final String port;
+    private final int port;
 
     private final double temperature;
     private final int timeout;
@@ -30,12 +30,12 @@ public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent {
 
     public OLLAMAEvaluatorAgent(JSONObject settings) {
         super(settings);
-        this.urlLlama = getSettingProperty("ollama-url");
-        this.port = getSettingProperty("ollama-port");
-        this.temperature = Double.parseDouble(getSettingProperty("temperature"));
-        this.ctx = Double.parseDouble(getSettingProperty("num_ctx"));
-        if(!getSettingProperty("timeout").isEmpty()) {
-            timeout = Integer.parseInt(getSettingProperty("timeout"));
+        this.urlLlama = settings.getString("ollama-url");
+        this.port = settings.getInt("ollama-port");
+        this.temperature = settings.getFloat("temperature");
+        this.ctx = settings.getInt("num_ctx");
+        if(settings.has("timeout") && !settings.isNull("timeout")) {
+            timeout = settings.getInt("timeout");
         } else {
             timeout = 600;
         }

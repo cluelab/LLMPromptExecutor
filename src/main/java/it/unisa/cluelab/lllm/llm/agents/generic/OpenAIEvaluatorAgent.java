@@ -23,9 +23,9 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
 
     public OpenAIEvaluatorAgent(JSONObject settings) {
         super(settings);
-        this.token = getSettingProperty("openai-token");
-        this.temperature = Double.parseDouble(getSettingProperty("temperature"));
-        this.ctx = Integer.parseInt(getSettingProperty("num_ctx"));
+        this.token = settings.getString("openai-token");
+        this.temperature = settings.getFloat("temperature");
+        this.ctx = settings.getInt("num_ctx");
     }
 
     public void setModel(String model) {
