@@ -76,6 +76,18 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
         return responseMessage.getContent();
     }
 
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
     class Result {
         String answer;
 

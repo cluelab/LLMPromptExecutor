@@ -23,7 +23,7 @@ public class PromptList extends ArrayList<Prompt> {
     }
 
     public void addSystemPrompt(String content) {
-        addPrompt(ASSISTANT, content);
+        addPrompt(SYSTEM, content);
     }
 
     public void addUserPrompt(String content) {
