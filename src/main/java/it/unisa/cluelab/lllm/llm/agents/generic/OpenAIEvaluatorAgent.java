@@ -6,6 +6,7 @@ import com.theokanning.openai.service.OpenAiService;
 import it.unisa.cluelab.lllm.llm.LLMEvaluatorAgent;
 import it.unisa.cluelab.lllm.llm.prompt.Prompt;
 import it.unisa.cluelab.lllm.llm.prompt.PromptList;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.time.Duration;
@@ -32,18 +33,47 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
         this.model = model;
     }
 
-
+    public String functionName() {
+        return "auto";
+    }
 
     @Override
     public String evaluate(List<Prompt> prompts, String grid) {
-        OpenAiService service = new OpenAiService(token, Duration.ofSeconds(90));
+        OpenAiService service = new OpenAiService(getToken(), Duration.ofSeconds(90));
+        ChatMessage responseMessage = service.createChatCompletion(getChatCompletionRequest(prompts))
+                .getChoices()
+                .get(0)
+                .getMessage();
+        ChatFunctionCall functionCall = responseMessage.getFunctionCall();
+        return responseMessage.getContent();
+    }
 
-        FunctionExecutor functionExecutor = new FunctionExecutor(Collections.singletonList(ChatFunction.builder()
+    private ChatCompletionRequest getChatCompletionRequest(List<Prompt> prompts) {
+        return ChatCompletionRequest
+                .builder()
+                .model(this.model)
+                .temperature(this.temperature)
+                .messages(toChatMessages(prompts))
+                .functions(getFunctionExecutor().getFunctions())
+                .functionCall(ChatCompletionRequest.ChatCompletionRequestFunctionCall.of(functionName()))
+                .n(1)
+                .maxTokens(this.ctx)
+                .logitBias(new HashMap<>())
+                .build();
+    }
+
+
+    @NotNull
+    public FunctionExecutor getFunctionExecutor() {
+        return new FunctionExecutor(Collections.singletonList(ChatFunction.builder()
                 .name("transpile")
                 .description("Convert a string")
                 .executor(Result.class, Result::getAnswer)
                 .build()));
+    }
 
+    @NotNull
+    private static List<ChatMessage> toChatMessages(List<Prompt> prompts) {
         List<ChatMessage> messages = new ArrayList<>();
         for (int i = 0; i < prompts.size(); i++) {
             if (prompts.get(i).getRole().equals(PromptList.SYSTEM)) {
@@ -57,23 +87,7 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
                 messages.add(firstMsg);
             }
         }
-
-
-        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-                .builder()
-                .model(this.model)
-                .temperature(this.temperature)
-                .messages(messages)
-                .functions(functionExecutor.getFunctions())
-                .functionCall(ChatCompletionRequest.ChatCompletionRequestFunctionCall.of("auto"))
-                .n(1)
-                .maxTokens(this.ctx)
-                .logitBias(new HashMap<>())
-                .build();
-        ChatMessage responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
-        messages.add(responseMessage); // don't forget to update the conversation with the latest response
-        ChatFunctionCall functionCall = responseMessage.getFunctionCall();
-        return responseMessage.getContent();
+        return messages;
     }
 
     public double getTemperature() {
@@ -86,6 +100,10 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
 
     public String getModel() {
         return model;
+    }
+
+    public int getCtx() {
+        return ctx;
     }
 
     class Result {
