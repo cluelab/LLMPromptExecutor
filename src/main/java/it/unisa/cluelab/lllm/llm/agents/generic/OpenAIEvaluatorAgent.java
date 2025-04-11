@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
+public abstract class OpenAIEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
 
     private String model;
     private final String token;
@@ -38,17 +38,17 @@ public abstract class OpenAIEvaluatorAgent extends LLMEvaluatorAgent {
     }
 
     @Override
-    public String evaluate(List<Prompt> prompts, String grid) {
+    public E evaluate(List<Prompt> prompts, String grid) {
         OpenAiService service = new OpenAiService(getToken(), Duration.ofSeconds(90));
         ChatMessage responseMessage = service.createChatCompletion(getChatCompletionRequest(prompts))
                 .getChoices()
                 .get(0)
                 .getMessage();
         ChatFunctionCall functionCall = responseMessage.getFunctionCall();
-        return responseMessage.getContent();
+        return (E) responseMessage.getContent();
     }
 
-    private ChatCompletionRequest getChatCompletionRequest(List<Prompt> prompts) {
+    public ChatCompletionRequest getChatCompletionRequest(List<Prompt> prompts) {
         return ChatCompletionRequest
                 .builder()
                 .model(this.model)

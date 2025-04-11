@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class GeminiEvaluatorAgent extends LLMEvaluatorAgent {
+public abstract class GeminiEvaluatorAgent extends LLMEvaluatorAgent<String> {
 
     private String model;
     private final String projectId;

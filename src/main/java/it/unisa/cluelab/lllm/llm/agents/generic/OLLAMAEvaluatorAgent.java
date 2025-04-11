@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent {
+public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent<String> {
 
     public static Logger logger = Logger.getLogger(OLLAMAEvaluatorAgent.class.getName());
     private final String urlLlama;

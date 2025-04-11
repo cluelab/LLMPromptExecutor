@@ -25,7 +25,7 @@ public class LLMService {
             try {
                 Evaluation evaluation = new Evaluation();
                 evaluation.setLlmAgent(agent.getClass().getName());
-                String evaluationResponse = agent.evaluate(prompts, grid);
+                String evaluationResponse = (String) agent.evaluate(prompts, grid);
                 if (evaluationResponse != null) {
                     String[] response = evaluationResponse.replaceAll("\n", "").split(";");
                     if (response.length == 2) {

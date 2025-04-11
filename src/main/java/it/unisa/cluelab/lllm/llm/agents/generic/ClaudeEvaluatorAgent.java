@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent {
+public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent<String> {
 
     private final int maxTokens;
     private String model;
