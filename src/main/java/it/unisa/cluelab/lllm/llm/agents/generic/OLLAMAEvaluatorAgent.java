@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent<String> {
+public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
 
     public static Logger logger = Logger.getLogger(OLLAMAEvaluatorAgent.class.getName());
     private final String urlLlama;
@@ -47,7 +47,7 @@ public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent<String> {
     }
 
     @Override
-    public String evaluate(List<Prompt> prompts, String grid) throws IOException {
+    public E evaluate(List<Prompt> prompts, String grid) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject prompt = new JSONObject();
         JSONObject options = new JSONObject();
@@ -85,12 +85,14 @@ public abstract class OLLAMAEvaluatorAgent extends LLMEvaluatorAgent<String> {
             logger.info(responseJson);
             JSONObject resp = new JSONObject(responseJson);
             JSONObject message = (JSONObject) resp.get("message");
-            return (String) message.get("content");
+            return parse((String) message.get("content"));
 
         }
         System.out.println("null-response");
-        return "ERROR_EMPTY_EVAL";
+        return null;
     }
+
+    public abstract E parse(String rawContent);
 
     public void initClient() {
         this.client = new OkHttpClient().newBuilder()
