@@ -51,7 +51,7 @@ public class PromptList extends ArrayList<Prompt> {
             message.put("content", p.getContent());
             messages.put(message);
         }
-        file_put_contents(filename, messages.toString());
+        file_put_contents(filename, messages.toString(2));
 
     }
     public void importFromJson(String filename) throws IOException {
