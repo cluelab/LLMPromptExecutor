@@ -2,6 +2,7 @@ package it.unisa.cluelab.lllm.llm.agents.generic;
 
 import it.unisa.cluelab.lllm.llm.LLMEvaluatorAgent;
 import it.unisa.cluelab.lllm.llm.prompt.Prompt;
+import it.unisa.cluelab.lllm.llm.prompt.PromptList;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
 
     private final double ctx;
     private String model;
+    private String token;
 
     private OkHttpClient client;
 
@@ -39,6 +41,11 @@ public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
         } else {
             timeout = 600;
         }
+        if(settings.has("ollama-token") && !settings.isNull("ollama-token")) {
+            this.token = settings.getString("ollama-token");
+        } else {
+            this.token = null;
+        }
         initClient();
     }
 
@@ -47,7 +54,7 @@ public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
     }
 
     @Override
-    public E evaluate(List<Prompt> prompts, String grid) throws IOException {
+    public E evaluate(PromptList prompts, String grid) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject prompt = new JSONObject();
         JSONObject options = new JSONObject();
@@ -63,7 +70,7 @@ public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
         JSONArray messages = new JSONArray();
         prompt.put("messages", messages);
 
-        for (int i = 1; i < prompts.size(); i++) {
+        for (int i = 0; i < prompts.size(); i++) {
             Prompt p = prompts.get(i);
             JSONObject message = new JSONObject();
             message.put("role", p.getRole());
@@ -74,19 +81,24 @@ public abstract class OLLAMAEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
 
         RequestBody body = RequestBody.create(mediaType, prompt.toString());
 
-        Request request = new Request.Builder()
+        Request.Builder requestBuilder = new Request.Builder()
                 .url(this.urlLlama + ":" + this.port + endPointGenerate)
                 .method("POST", body)
-                .addHeader("Content-Type", "application/json")
-                .build();
+                .addHeader("Content-Type", "application/json");
+
+        if (this.token != null && !this.token.isEmpty()) {
+            requestBuilder.addHeader("Authorization", "Bearer " + this.token);
+        }
+
+        Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
         if (response.body() != null) {
             String responseJson = response.body().string();
             logger.info(responseJson);
             JSONObject resp = new JSONObject(responseJson);
             JSONObject message = (JSONObject) resp.get("message");
+            prompts.addAssistantPrompt(message.get("content").toString());
             return parse((String) message.get("content"));
-
         }
         System.out.println("null-response");
         return null;

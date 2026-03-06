@@ -1,7 +1,7 @@
 package it.unisa.cluelab.lllm.llm;
 
 import it.unisa.cluelab.lllm.Evaluation;
-import it.unisa.cluelab.lllm.llm.prompt.Prompt;
+import it.unisa.cluelab.lllm.llm.prompt.PromptList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class LLMService {
         this.evaluationStrategies.add(agent);
     }
 
-    public List<Evaluation> evaluate(List<Prompt> prompts, String grid) {
+    public List<Evaluation> evaluate(PromptList prompts, String grid) {
         List<Evaluation> results = new ArrayList<>();
         this.evaluationStrategies.forEach(agent -> {
             try {

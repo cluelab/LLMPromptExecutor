@@ -5,11 +5,10 @@ import com.google.cloud.vertexai.api.GenerateContentResponse;
 import com.google.cloud.vertexai.generativeai.preview.GenerativeModel;
 import com.google.cloud.vertexai.generativeai.preview.ResponseHandler;
 import it.unisa.cluelab.lllm.llm.LLMEvaluatorAgent;
-import it.unisa.cluelab.lllm.llm.prompt.Prompt;
+import it.unisa.cluelab.lllm.llm.prompt.PromptList;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 
 public abstract class GeminiEvaluatorAgent extends LLMEvaluatorAgent<String> {
 
@@ -28,7 +27,7 @@ public abstract class GeminiEvaluatorAgent extends LLMEvaluatorAgent<String> {
 
 
     @Override
-    public String evaluate(List<Prompt> prompts, String grid) throws IOException {
+    public String evaluate(PromptList prompts, String grid) throws IOException {
         try {
             VertexAI vertexAI = new VertexAI(this.projectId, this.projectLocation);
             GenerativeModel model = new GenerativeModel(this.model, vertexAI);

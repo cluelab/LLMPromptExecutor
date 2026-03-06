@@ -2,12 +2,12 @@ package it.unisa.cluelab.lllm.llm.agents.generic;
 
 import it.unisa.cluelab.lllm.llm.LLMEvaluatorAgent;
 import it.unisa.cluelab.lllm.llm.prompt.Prompt;
+import it.unisa.cluelab.lllm.llm.prompt.PromptList;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent<String> {
@@ -31,7 +31,7 @@ public abstract class ClaudeEvaluatorAgent extends LLMEvaluatorAgent<String> {
     }
 
     @Override
-    public String evaluate(List<Prompt> prompts, String grid) throws IOException {
+    public String evaluate(PromptList prompts, String grid) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject prompt = new JSONObject();
         prompt.put("model", this.model);

@@ -38,7 +38,7 @@ public abstract class OpenAIEvaluatorAgent<E> extends LLMEvaluatorAgent<E> {
     }
 
     @Override
-    public E evaluate(List<Prompt> prompts, String grid) {
+    public E evaluate(PromptList prompts, String grid) {
         OpenAiService service = new OpenAiService(getToken(), Duration.ofSeconds(90));
         ChatMessage responseMessage = service.createChatCompletion(getChatCompletionRequest(prompts))
                 .getChoices()
